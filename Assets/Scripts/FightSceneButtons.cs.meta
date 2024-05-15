@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7672f22338aa1c9418a473903b2334a3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player: {instanceID: 0}
+  - enemy: {instanceID: 0}
+  - cameraShake: {instanceID: 0}
+  - btnsrc2: {instanceID: 0}
+  - btnsrc3: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
