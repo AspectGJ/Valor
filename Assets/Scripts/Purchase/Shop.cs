@@ -20,6 +20,7 @@ public class Item
 public class Shop : MonoBehaviour, IStoreListener
 {
     IStoreController storeController;
+    IExtensionProvider storeExtensionProvider;
 
     public TextMeshProUGUI healthPotionText;
     public TextMeshProUGUI manaPotionText;
@@ -30,8 +31,48 @@ public class Shop : MonoBehaviour, IStoreListener
     // Start is called before the first frame update
     void Start()
     {
-        healthPotion.amount = PlayerPrefs.GetInt("HealthPotion");
-        manaPotion.amount = PlayerPrefs.GetInt("ManaPotion");
+        IAPStart();
+        healthPotion.amount = PlayerPrefs.GetInt("HealthPotion", 0);
+        manaPotion.amount = PlayerPrefs.GetInt("ManaPotion", 0);
+    }
+
+    private void Update()
+    {
+        if (healthPotionText != null)
+        {
+            healthPotionText.text = ": " + healthPotion.amount.ToString();
+        }
+
+        if (manaPotionText != null)
+        {
+            manaPotionText.text = ": " + manaPotion.amount.ToString();
+        }
+    }
+
+    private void IAPStart()
+    {
+        var module = StandardPurchasingModule.Instance();
+        ConfigurationBuilder builder = ConfigurationBuilder.Instance(module);
+
+        builder.AddProduct(healthPotion.id, ProductType.Consumable);
+        builder.AddProduct(manaPotion.id, ProductType.Consumable);
+
+        UnityPurchasing.Initialize(this, builder);
+    }
+
+    public void IAPButton(string productID)
+    {
+        Product product = storeController.products.WithID(productID);
+
+        if (product != null && product.availableToPurchase)
+        {
+            print("Buying");
+            storeController.InitiatePurchase(product);
+        }
+        else
+        {
+            print("Product not found or not available for purchase");
+        }
     }
 
     void SetupBuilder()
@@ -47,6 +88,7 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         print("Store Initialized");
         storeController = controller;
+        storeExtensionProvider = extensions;
     }
 
     public void Health_Btn_Pressed()
@@ -63,20 +105,38 @@ public class Shop : MonoBehaviour, IStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
     {
-        var product = purchaseEvent.purchasedProduct;
+        //var product = purchaseEvent.purchasedProduct;
 
-        print("Purchased: " + product.definition.id);
+        //print("Purchased: " + product.definition.id);
 
-        if (product.definition.id == healthPotion.id)
+        //if (product.definition.id == healthPotion.id)
+        //{
+        //    AddHealthPotion();
+        //}
+        //else if (product.definition.id == manaPotion.id)
+        //{
+        //    AddManaPotion();
+        //}
+
+        //return PurchaseProcessingResult.Complete;
+
+        if(String.Equals(purchaseEvent.purchasedProduct.definition.id, healthPotion.id, StringComparison.Ordinal))
         {
             AddHealthPotion();
+            return PurchaseProcessingResult.Complete;
         }
-        else if (product.definition.id == manaPotion.id)
+        else if (String.Equals(purchaseEvent.purchasedProduct.definition.id, manaPotion.id, StringComparison.Ordinal))
         {
             AddManaPotion();
+            return PurchaseProcessingResult.Complete;
+        }
+        else
+        {
+            return PurchaseProcessingResult.Pending;
         }
 
-        return PurchaseProcessingResult.Complete;
+        
+
     }
 
     public void AddHealthPotion()
@@ -85,10 +145,7 @@ public class Shop : MonoBehaviour, IStoreListener
         healthPotion.amount++;
         PlayerPrefs.SetInt("HealthPotion", healthPotion.amount);
         
-        if(healthPotionText != null)
-        {
-            healthPotionText.text = ": " + healthPotion.amount.ToString();
-        }
+        
     }
 
     public void AddManaPotion()
@@ -97,10 +154,7 @@ public class Shop : MonoBehaviour, IStoreListener
         manaPotion.amount++;
         PlayerPrefs.SetInt("ManaPotion", manaPotion.amount);
 
-        if(manaPotionText != null)
-        {
-            manaPotionText.text = ": " + manaPotion.amount.ToString();
-        }
+        
         
     }
 

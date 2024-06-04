@@ -40,10 +40,10 @@ public class BasicStatcEnemy : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (opponent == null) // && opponent.gameObject.tag.Equals("Enemy")
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-        }
+        // if (opponent == null) // && opponent.gameObject.tag.Equals("Enemy")
+        // {
+        //     UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        // }
 
         if (enemyAttributesOS.healthPoint != targetHealth)
         {

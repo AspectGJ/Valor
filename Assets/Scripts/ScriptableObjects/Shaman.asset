@@ -12,18 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8cac1de80c98642834bab6793ea3bc, type: 3}
   m_Name: Shaman
   m_EditorClassIdentifier: 
-  healthPoint: 100
-  mana: 80
-  attackmin: 0
-  attackmax: 0
+  healthPoint: 0
+  mana: 11
+  attackmin: 5
+  attackmax: 15
   attackCost: 0
-  StrongAttackmin: 0
-  StrongAttackmax: 0
+  StrongAttackmin: 10
+  StrongAttackmax: 30
   StrongAttackCost: 0
-  DeepSharpnessmin: 0
-  DeepSharpnessmax: 0
+  DeepSharpnessmin: 2
+  DeepSharpnessmax: 6
   DeepSharpnessCost: 0
   enemyAttackmin: 0
   enemyAttackmax: 0
   enemyVanishmin: 0
   enemyVanishmax: 0
+  Healmin: 5
+  Healmax: 12
+  HealCost: 5
+  Stunmin: 0
+  Stunmax: 2
+  StunCost: 3
+  SHAttackmin: 4
+  SHAttackmax: 7
+  SHAttackCost: 4

@@ -18,7 +18,7 @@ public interface IPersistence
 
     public void TakeDamage(int damage);
 
-    public void IncreaseMana();
+    public void IncreaseMana(int amount);
 
     public void DecreaseMana(int cost);
 

@@ -15,6 +15,10 @@ TagManager:
   - gate4_3
   - Market
   - Shaman
+  - NPC2
+  - NPC3
+  - NPC4
+  - Market2
   layers:
   - Default
   - TransparentFX
@@ -51,6 +55,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2378845583
     locked: 0
   - name: back
     uniqueID: 2127492911

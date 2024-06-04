@@ -15,6 +15,7 @@ public class StatManager2 : MonoBehaviour
 
     public TextMeshProUGUI enemyHP;
     public TextMeshProUGUI enemyBleedTurns;
+    public TextMeshProUGUI enemyStunTurns;
 
     public GameObject[] players;
     public GameObject enemy;
@@ -49,6 +50,7 @@ public class StatManager2 : MonoBehaviour
 
             enemyHP.text = enemy.GetComponent<BasicStatsEnemy2>().enemyAttributesOS.healthPoint.ToString();
             enemyBleedTurns.text = enemy.GetComponent<BasicStatsEnemy2>().bleedTurns.ToString();
+            enemyStunTurns.text = enemy.GetComponent<BasicStatsEnemy2>().stunTurns.ToString();
         }
         
     }

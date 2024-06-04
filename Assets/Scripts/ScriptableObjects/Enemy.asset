@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8cac1de80c98642834bab6793ea3bc, type: 3}
   m_Name: Enemy
   m_EditorClassIdentifier: 
-  healthPoint: 200
   healthPoint: 100
-  healthPoint: 217
   mana: 0
   attackmin: 0
   attackmax: 0
@@ -27,5 +25,14 @@ MonoBehaviour:
   DeepSharpnessCost: 0
   enemyAttackmin: 5
   enemyAttackmax: 10
-  enemyVanishmin: 8
+  enemyVanishmin: 7
   enemyVanishmax: 15
+  Healmin: 0
+  Healmax: 0
+  HealCost: 0
+  Stunmin: 0
+  Stunmax: 0
+  StunCost: 0
+  SHAttackmin: 0
+  SHAttackmax: 0
+  SHAttackCost: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 
-public class FileDataHandler 
+public class FileDataHandler
 {
     private string dirPath = "";
     private string fileName = "";
@@ -42,20 +42,36 @@ public class FileDataHandler
 
         string fullPath = Path.Combine(dirPath, fileName);
 
-          if (File.Exists(fileName))
+        if (File.Exists(fullPath))
         {
-            //try catch
-            string datatoLoad = "";
-            using (FileStream sr = new FileStream(fullPath, FileMode.Open))
+            try
             {
-                using (StreamReader reader = new StreamReader(sr))
+                string dataToLoad = "";
+                using (FileStream sr = new FileStream(fullPath, FileMode.Open))
                 {
-                      datatoLoad = reader.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(sr))
+                    {
+                        dataToLoad = reader.ReadToEnd();
+                        //Debug.Log("Filehandler loaded data: " + dataToLoad);
+                    }
+
                 }
+
+                loadedData = JsonUtility.FromJson<Data>(dataToLoad);
+                //Debug.Log("Filehadler loaded player health: " + loadedData.playerAttributesData.healthPoint);
                 
             }
+            catch (Exception e)
+            {
+                //Debug.Log("Error loading data: " + e.Message);
+            }
 
-            loadedData= JsonUtility.FromJson<Data>(datatoLoad);
+
+        }
+
+        else
+        {
+           //Debug.LogWarning("Save File not found: " + fullPath);
         }
 
         return loadedData;

@@ -27,6 +27,7 @@ public class ShamanMoveState : ShamanState
     {
         base.Update();
 
+        shaman.flipRenderer();
 
         if (!moving)
         {

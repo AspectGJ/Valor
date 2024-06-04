@@ -24,7 +24,6 @@ public class StatManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //get the player's hp
         
         //if the meshes are not null, then get the hp of the player and enemy
         if (player != null && enemy != null)

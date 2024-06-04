@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,13 @@ public class Data
 
     public Data()
     {
-        playerAttributesData = new AttributesData();
-        shamanAttributesData = new AttributesData();
+        playerAttributesData = new AttributesData(true);
+        shamanAttributesData = new AttributesData(false);
     }   
+
+    public String toString()
+    {
+        return playerAttributesData.toString();
+    }
 
 }

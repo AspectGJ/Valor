@@ -14,6 +14,7 @@ public class BasicStatsEnemy2 : MonoBehaviour
     public int vanishAttack;
 
     public int bleedTurns = 0;
+    public int stunTurns = 0;
 
     public int targetHealth;
     int maxHealth;
@@ -37,12 +38,7 @@ public class BasicStatsEnemy2 : MonoBehaviour
             Destroy(gameObject);
         }
 
-        /*
-        if (opponent == null) // && opponent.gameObject.tag.Equals("Enemy")
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-        }
-        */
+        
 
         if (enemyAttributesOS.healthPoint != targetHealth)
         {
@@ -55,25 +51,15 @@ public class BasicStatsEnemy2 : MonoBehaviour
     public void Attack(GameObject opponent)
     {   
         attack = RandomNum(enemyAttributesOS.enemyAttackmin, enemyAttributesOS.enemyAttackmax);
-        /*
-        switch (RandomNum(0, 2))
-        {
-            case 0:
-                opponent.GetComponent<BasicStats>().TakeDamage(attack);
-                break;
-            case 1:
-                opponent2.GetComponent<BasicStats>().TakeDamage(attack);
-                break;
-        } 
-        */   
+         
         if(opponent.tag.Equals("Player"))
         {
-            print("Enemy attacked to player");
+            
             opponent.GetComponent<BasicStatsPlayer2>().TakeDamage(attack); // if the tag is Player
         }
         else
         {
-            print("Enemy attacked to shaman");
+            
             opponent.GetComponent<BasicStatsShaman2>().TakeDamage(attack); // if the tag is Shaman
         }   
     }
@@ -84,12 +70,12 @@ public class BasicStatsEnemy2 : MonoBehaviour
 
         if(opponent.tag.Equals("Player"))
         {
-            print("Enemy Vanish attacked to player");
+            
             opponent.GetComponent<BasicStatsPlayer2>().TakeDamage(vanishAttack); // if the tag is Player
         }
         else
         {
-            print("Enemy Vanish attacked to shaman");
+            
             opponent.GetComponent<BasicStatsShaman2>().TakeDamage(vanishAttack); // if the tag is Shaman
         }
             

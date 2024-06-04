@@ -6,7 +6,17 @@ using UnityEngine;
 public class Shaman : MonoBehaviour
 {
     [Header("Shaman Movement Variables")]
-    public float moveSpeed = 5f;
+
+    //public Collider2D shamanCollider;
+
+    public GameObject player; // Reference to the player
+    public Transform playerTransform; // Reference to the player's transform
+    public bool playerFlipX = false; // Reference to the player's flipX value
+    public float followSpeed = 5f; // Speed at which the sidekick follows the player
+    public float followDistance = 2f; // Minimum distance between the player and sidekick
+
+
+    bool isInFightScene; // Check if the sidekick is in the fight scene
 
     public bool moving;
 
@@ -22,12 +32,10 @@ public class Shaman : MonoBehaviour
     public ShamanIdleState idleState { get; private set; }
 
     public ShamanHealState healState { get; private set; }
-   // public PlayerAttackState attackState { get; private set; }
+    public ShamanStunState stunState { get; private set; }
+    public ShamanSHAttackState SHattackState { get; private set; }
 
 
-    //public PlayerStrongAttackState strongAttackState { get; private set; }
-   // public PlayerDeepSharpnessState deepSharpnessState { get; private set; }
-    
     #endregion
 
     private void Awake()
@@ -36,10 +44,9 @@ public class Shaman : MonoBehaviour
         moveState = new ShamanMoveState(this, stateMachine, "Move");
         idleState = new ShamanIdleState(this, stateMachine, "Idle");
         healState = new ShamanHealState(this, stateMachine, "Heal");
-        //attackState = new PlayerAttackState(this, stateMachine, "Attack");
+        stunState = new ShamanStunState(this, stateMachine, "Stun");
+        SHattackState = new ShamanSHAttackState(this, stateMachine, "SHAttack");
 
-        //strongAttackState = new PlayerStrongAttackState(this, stateMachine, "Sattack");
-        //deepSharpnessState = new PlayerDeepSharpnessState(this, stateMachine, "DeepSharpness");
     }
 
     // Start is called before the first frame update
@@ -48,30 +55,82 @@ public class Shaman : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rb = GetComponentInChildren<Rigidbody2D>();
         stateMachine.Initialize(idleState);
-        
+
+        //get current scene number
+        int scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+
+        switch (scene)
+        {
+            
+            case 1:
+                isInFightScene = false;
+                break;
+            case 2:
+                isInFightScene = true;
+                break;
+            case 3:
+                isInFightScene = false;
+                break;
+            case 4:
+                isInFightScene = true;
+                break;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         stateMachine.ShamanCurrentState.Update();
+        if (!isInFightScene)
+        {
+            playerFlipX = player.GetComponentInChildren<SpriteRenderer>().flipX;
+        }
         
     }
-    public void setVelocity(float xInput)
+
+    void FixedUpdate()
     {
-        
+        if (playerTransform != null && !isInFightScene)
+        {
+            // Calculate the direction towards the player
+            Vector3 direction = playerTransform.position - transform.position;
+            float distance = direction.magnitude; // Calculate the distance between the player and sidekick
+
+            // Check if the distance is greater than the follow distance
+            if (distance > followDistance)
+            {
+                // Normalize the direction vector
+                direction.Normalize();
+
+                // Move the sidekick towards the player
+                transform.position += direction * followSpeed * Time.deltaTime;
+                moving = true; 
+            }
+            else {
+                moving = false;           
+            }
+        }
+    }
+    public void flipRenderer()
+    {
         //if xInput is minus, make flip X in sprite renderer true
-        if (xInput < 0)
+        if (playerFlipX && !isInFightScene)
         {
             GetComponentInChildren<SpriteRenderer>().flipX = true;
         }
-        else if (xInput > 0)
+        else
         {
             GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
     }
 
-    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // If the sidekick collides with the player, ignore the collision
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Physics2D.IgnoreCollision(collision.collider, GetComponentInChildren<Collider2D>());
+        }
+    }
 
-    
 }

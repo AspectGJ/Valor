@@ -4,11 +4,13 @@ using System.ComponentModel;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
 {
-    DataPersistenceManager dataPersistenceManager;
+    //public DataPersistenceManager dataPersistenceManager;
+
+    //public DataPersistenceManagerLocal localDataPersistenceManager;
     public AttributesScriptableObject playerAttributesOS;
     public GameObject opponent;
     public int attack;
@@ -16,7 +18,7 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
     public int deepSharpness;
 
     public int targetHealth;
-    int maxHealth;
+    public int maxHealth;
 
     public int targetMana;
     public int maxMana;
@@ -25,16 +27,39 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
     public Image healthBar;
     float healthChangeSpeed = 10f;
     public Image manaBar;
-    void Start() {
-        dataPersistenceManager.LoadGame();
-        LoadData(dataPersistenceManager.data);
+    Notifications notifications;
+
+    void Start()
+    {
+        if (playerAttributesOS == null)
+        {
+            playerAttributesOS = Resources.Load<AttributesScriptableObject>("Scripts/ScriptableObjects/Player");
+            if (playerAttributesOS == null)
+            {
+                //Debug.LogError("Player attributes not loaded!");
+                return;
+            }
+        }
+
+        if (DataPersistenceManagerLocal.instance == null)
+        {
+            //Debug.LogError("localDataPersistenceManager instance not assigned! in fight 2");
+            return;
+        }
+
+        //localDataPersistenceManager.LoadGame();
+        LoadData(DataPersistenceManagerLocal.instance.data);
+
     }
 
-    Notifications notifications;
 
 
     public void LoadData(Data data)
     {
+        if (playerAttributesOS == null)
+        {
+            playerAttributesOS = new AttributesScriptableObject();
+        }
         playerAttributesOS.healthPoint = data.playerAttributesData.healthPoint;
         targetHealth = playerAttributesOS.healthPoint;
         maxHealth = playerAttributesOS.healthPoint;
@@ -42,6 +67,11 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
         playerAttributesOS.mana = data.playerAttributesData.mana;
         targetMana = playerAttributesOS.mana;
         maxMana = playerAttributesOS.mana;
+        //     // Sağlık çubuğunu güncelle
+        //healthBar.fillAmount = (float)playerAttributesOS.healthPoint / maxHealth;
+
+        // // Mana çubuğunu güncelle
+        //manaBar.fillAmount = (float)playerAttributesOS.mana / maxMana;
 
         playerAttributesOS.attackmin = data.playerAttributesData.attackmin;
         playerAttributesOS.attackmax = data.playerAttributesData.attackmax;
@@ -54,6 +84,7 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
     }
     public void SaveData(Data data)
     {
+        //print("Saving player data");
         data.playerAttributesData.healthPoint = playerAttributesOS.healthPoint;
         data.playerAttributesData.mana = playerAttributesOS.mana;
 
@@ -65,30 +96,20 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
 
         data.playerAttributesData.DeepSharpnessmin = playerAttributesOS.DeepSharpnessmin;
         data.playerAttributesData.DeepSharpnessmax = playerAttributesOS.DeepSharpnessmax;
+       // print("Saved player data");
     }
 
     void Update()
     {
-        if (playerAttributesOS.healthPoint <= 0)
-        {
-            //Destroy(gameObject);
-        }
 
-        if (opponent != null)
-        {
 
-        }
-        else
+        if (opponent == null)
         {
             SendNotification();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
-        if (playerAttributesOS.healthPoint != targetHealth)
-        {
-            playerAttributesOS.healthPoint = (int)Mathf.MoveTowards(playerAttributesOS.healthPoint, targetHealth, healthChangeSpeed * Time.deltaTime);
-            healthBar.fillAmount = (float)playerAttributesOS.healthPoint / maxHealth;
-        }
+
         if (playerAttributesOS.mana != targetMana)
         {
             playerAttributesOS.mana = (int)Mathf.MoveTowards(playerAttributesOS.mana, targetMana, healthChangeSpeed * Time.deltaTime);
@@ -149,6 +170,12 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
 
         targetHealth = Mathf.Clamp(targetHealth, 0, maxHealth);
 
+        if (playerAttributesOS.healthPoint != targetHealth)
+        {
+            playerAttributesOS.healthPoint = targetHealth;
+            healthBar.fillAmount = (float)playerAttributesOS.healthPoint / maxHealth;
+        }
+
     }
 
     public void SendNotification()
@@ -164,11 +191,30 @@ public class BasicStatsPlayer2 : MonoBehaviour, IPersistence
         return randomNumber;
     }
 
-    public void IncreaseMana()
+    public void IncreaseMana(int amount)
     {
-        targetMana += 5;
+        targetMana += amount;
 
         targetMana = Mathf.Clamp(targetMana, 0, maxMana);
+
+        if(playerAttributesOS.mana != targetMana)
+        {
+            playerAttributesOS.mana = targetMana;
+            manaBar.fillAmount = (float)playerAttributesOS.mana / maxMana;
+        }
+    }
+
+    public void IncreaseHealth(int amount)
+    {
+        targetHealth += amount;
+
+        targetHealth = Mathf.Clamp(targetHealth, 0, maxHealth);
+
+        if (playerAttributesOS.healthPoint != targetHealth)
+        {
+            playerAttributesOS.healthPoint = targetHealth;
+            healthBar.fillAmount = (float)playerAttributesOS.healthPoint / maxHealth;
+        }
     }
 
     public void DecreaseMana(int amount)

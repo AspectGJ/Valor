@@ -26,4 +26,16 @@ public class AttributesScriptableObject : ScriptableObject
 
     public int enemyVanishmin;
     public int enemyVanishmax;
+
+    public int Healmin;
+    public int Healmax;
+    public int HealCost;
+
+    public int Stunmin;
+    public int Stunmax;
+    public int StunCost;
+
+    public int SHAttackmin;
+    public int SHAttackmax;
+    public int SHAttackCost;
 }

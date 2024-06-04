@@ -33,10 +33,6 @@ public class PlayerMoveState : PlayerState
         {
             stateMachine.changeState(player.idleState);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            stateMachine.changeState(player.attackState);
-        }
     }
 
     public override void PhysicsUpdate()
